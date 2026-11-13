@@ -29,6 +29,13 @@
       "when": 1794535861227,
       "tag": "0003_studio_export_admin_helpers",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794539369475,
+      "tag": "0004_restrict_template_file_reads",
+      "breakpoints": true
     }
   ]
 }
