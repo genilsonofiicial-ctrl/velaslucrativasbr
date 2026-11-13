@@ -12,9 +12,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { safeRedirect } from "@/lib/safe-redirect";
 
 export const Route = createFileRoute("/entrar")({
-  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
-    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } =>
+    typeof search["redirect"] === "string" ? { redirect: search["redirect"] } : {},
   head: () => ({
     meta: [
       { title: "Entrar — Stúdio Velas Lucrativas" },

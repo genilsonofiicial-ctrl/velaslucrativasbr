@@ -28,3 +28,12 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Admin rights live only in `public.user_roles` checked via `public.has_role()`; never add a role/admin flag to `profiles` — a user-editable row would allow privilege escalation.
+- `profiles.plan` is writable only by the backend: `authenticated` has column-level UPDATE on `email` only, so users cannot upgrade themselves.
+- Signed-in-only pages live under `src/routes/_authenticated/` (client-only gate redirecting to `/entrar`); Estúdio and Biblioteca stay public top-level routes so they work without login.
+- Session state comes from `useAuth` (`src/hooks/useAuth.tsx`), the single `onAuthStateChange` listener; `ProtectedRoute` only decides what to show — RLS protects the data.
+- Storage bucket `templates` is private (workspace blocks public buckets) with an everyone-can-read policy; read files with signed URLs, not public URLs.
+- Layout chrome (header, mobile bottom nav, footer) is mounted once in `src/routes/__root.tsx`; nav items come from `src/components/layout/nav-items.ts`.
