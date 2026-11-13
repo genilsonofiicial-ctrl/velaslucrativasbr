@@ -46,6 +46,7 @@ export type Database = {
           comment: string | null
           created_at: string
           helped: boolean | null
+          helped_answer: string | null
           id: string
           user_id: string | null
           willing_to_pay: string | null
@@ -54,6 +55,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           helped?: boolean | null
+          helped_answer?: string | null
           id?: string
           user_id?: string | null
           willing_to_pay?: string | null
@@ -62,6 +64,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           helped?: boolean | null
+          helped_answer?: string | null
           id?: string
           user_id?: string | null
           willing_to_pay?: string | null
@@ -103,6 +106,7 @@ export type Database = {
           printer_margin_cm: number | null
           sheet: string
           template_id: string | null
+          thumbnail: string | null
           transform: Json
           updated_at: string
           user_id: string
@@ -120,6 +124,7 @@ export type Database = {
           printer_margin_cm?: number | null
           sheet?: string
           template_id?: string | null
+          thumbnail?: string | null
           transform?: Json
           updated_at?: string
           user_id?: string
@@ -137,6 +142,7 @@ export type Database = {
           printer_margin_cm?: number | null
           sheet?: string
           template_id?: string | null
+          thumbnail?: string | null
           transform?: Json
           updated_at?: string
           user_id?: string
@@ -155,6 +161,7 @@ export type Database = {
         Row: {
           aspect_ratio: number | null
           created_at: string
+          description: string | null
           id: string
           image_path: string | null
           is_active: boolean
@@ -169,6 +176,7 @@ export type Database = {
         Insert: {
           aspect_ratio?: number | null
           created_at?: string
+          description?: string | null
           id?: string
           image_path?: string | null
           is_active?: boolean
@@ -183,6 +191,7 @@ export type Database = {
         Update: {
           aspect_ratio?: number | null
           created_at?: string
+          description?: string | null
           id?: string
           image_path?: string | null
           is_active?: boolean
@@ -219,6 +228,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_metrics: { Args: never; Returns: Json }
+      admin_set_plan: {
+        Args: { _plan: string; _user_id: string }
+        Returns: undefined
+      }
+      export_count_this_month: {
+        Args: { _session_id: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

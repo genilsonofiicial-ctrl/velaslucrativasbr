@@ -22,6 +22,13 @@
       "when": 1794535463620,
       "tag": "0002_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794535861227,
+      "tag": "0003_studio_export_admin_helpers",
+      "breakpoints": true
     }
   ]
 }

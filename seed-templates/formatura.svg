@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+<defs><pattern id="p" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="30" cy="30" r="7" fill="#d96c86" opacity=".55"/></pattern></defs>
+<rect width="800" height="1000" fill="#f9e1e6"/>
+<rect width="800" height="1000" fill="url(#p)"/>
+<rect x="24" y="24" width="752" height="952" fill="none" stroke="#d96c86" stroke-width="6" rx="12"/>
+<rect x="181.6" y="390.0" width="436.8" height="220" rx="24" fill="#ffffff" opacity=".88"/>
+<text x="400.0" y="510.0" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#5c1f2c">Formatura</text>
+<text x="400.0" y="570.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" letter-spacing="4" fill="#5c1f2c" opacity=".7">DATAS ESPECIAIS · ARTE PROVISÓRIA</text>
+</svg>

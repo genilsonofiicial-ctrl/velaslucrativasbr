@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs><pattern id="p" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M40 8 L48 32 L72 40 L48 48 L40 72 L32 48 L8 40 L32 32 Z" fill="#d4a94c" opacity=".45"/></pattern></defs>
+<rect width="1600" height="1000" fill="#7a1a2b"/>
+<rect width="1600" height="1000" fill="url(#p)"/>
+<rect x="24" y="24" width="1552" height="952" fill="none" stroke="#d4a94c" stroke-width="6" rx="12"/>
+<rect x="416.59999999999997" y="390.0" width="766.8000000000001" height="220" rx="24" fill="#ffffff" opacity=".88"/>
+<text x="800.0" y="510.0" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="84" fill="#fff8ec">Renas no campo</text>
+<text x="800.0" y="570.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" letter-spacing="4" fill="#fff8ec" opacity=".7">NATAL · ARTE PROVISÓRIA</text>
+</svg>
