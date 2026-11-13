@@ -35,5 +35,12 @@ use the editor.
 - `profiles.plan` is writable only by the backend: `authenticated` has column-level UPDATE on `email` only, so users cannot upgrade themselves.
 - Signed-in-only pages live under `src/routes/_authenticated/` (client-only gate redirecting to `/entrar`); Estúdio and Biblioteca stay public top-level routes so they work without login.
 - Session state comes from `useAuth` (`src/hooks/useAuth.tsx`), the single `onAuthStateChange` listener; `ProtectedRoute` only decides what to show — RLS protects the data.
-- Storage bucket `templates` is private (workspace blocks public buckets) with an everyone-can-read policy; read files with signed URLs, not public URLs.
+- Storage bucket `templates` is private (workspace blocks public buckets) with an everyone-can-read policy; read files with signed URLs or `storage.download`, not public URLs.
 - Layout chrome (header, mobile bottom nav, footer) is mounted once in `src/routes/__root.tsx`; nav items come from `src/components/layout/nav-items.ts`.
+- Candle math lives in pure `src/lib/candle.ts` (tested in `src/test/candle.test.ts`); UI never re-implements formulas, it rounds only for display via `formatCm`.
+- Studio state is one Zustand store (`src/stores/studio.ts`) persisted to localStorage with `skipHydration`, rehydrated once in `__root.tsx` to avoid SSR mismatches; image blobs/object URLs are never persisted.
+- Art placement math (`placement`/`drawArt` in `src/lib/art-render.ts`) is shared by the flat preview, cylinder preview, PNG and PDF so exports match the preview exactly.
+- Exports are generated fully in the browser (jsPDF loaded via dynamic import) and prepared before the click so downloads keep user activation on mobile.
+- Plan rules (free monthly export limit, premium templates) live in `src/lib/plan.ts`; monthly export count comes from the `export_count_this_month` RPC because events are admin-read-only.
+- Admin dashboards read aggregates through security-definer RPCs (`admin_metrics`, `admin_set_plan`) that check `has_role` first; plan changes never go through a client-writable column.
+- Usage events go through `track()` in `src/lib/analytics.ts`, which never throws and stores an anonymous session id in localStorage.

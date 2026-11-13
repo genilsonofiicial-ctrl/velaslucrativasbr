@@ -25,28 +25,30 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+        </nav>
+
+        <div className="flex items-center gap-1">
           {isAdmin && (
             <Link
               to="/admin"
-              className="rounded-full px-3 py-2 text-wine-foreground/80 hover:text-gold-light"
+              className="focus-ring rounded-full p-2.5 text-wine-foreground/80 hover:text-gold-light"
               aria-label="Área administrativa"
             >
-              <Shield className="size-4" />
+              <Shield className="size-5" />
             </Link>
           )}
-        </nav>
-
-        {user ? (
-          <Button variant="gold" size="sm" onClick={signOut}>
-            <LogOut /> Sair
-          </Button>
-        ) : (
-          <Button asChild variant="gold" size="sm">
-            <Link to="/entrar">
-              <LogIn /> Entrar
-            </Link>
-          </Button>
-        )}
+          {user ? (
+            <Button variant="gold" size="sm" onClick={signOut}>
+              <LogOut /> Sair
+            </Button>
+          ) : (
+            <Button asChild variant="gold" size="sm">
+              <Link to="/entrar">
+                <LogIn /> Entrar
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );
