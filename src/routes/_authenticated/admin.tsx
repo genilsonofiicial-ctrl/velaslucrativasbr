@@ -1,14 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { BarChart3, Images, MessageSquareHeart } from "lucide-react";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
-import { PageHeader } from "@/components/layout/PageHeader";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Administração — Stúdio Velas Lucrativas" },
-      { name: "description", content: "Área administrativa." },
+      { name: "description", content: "Área administrativa do Stúdio Velas Lucrativas." },
       { property: "og:title", content: "Administração — Stúdio Velas Lucrativas" },
       { property: "og:description", content: "Área administrativa." },
       { property: "og:type", content: "website" },
@@ -16,32 +14,36 @@ export const Route = createFileRoute("/_authenticated/admin")({
       { name: "robots", content: "noindex" },
     ],
   }),
-  component: () => (
-    <ProtectedRoute requireAdmin>
-      <Admin />
-    </ProtectedRoute>
-  ),
+  component: AdminLayout,
 });
 
-const AREAS = [
-  { icon: Images, title: "Modelos", text: "Cadastrar e organizar estampas." },
-  { icon: BarChart3, title: "Uso do app", text: "Ver métricas de uso." },
-  { icon: MessageSquareHeart, title: "Opiniões", text: "Ler o que as usuárias dizem." },
-];
+const TABS = [
+  { to: "/admin", label: "Início", exact: true },
+  { to: "/admin/modelos", label: "Modelos", exact: false },
+  { to: "/admin/metricas", label: "Métricas", exact: false },
+  { to: "/admin/usuarios", label: "Usuários", exact: false },
+] as const;
 
-function Admin() {
+function AdminLayout() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <PageHeader eyebrow="Admin" title="Área administrativa" description="Em construção." />
-      <div className="grid gap-4 md:grid-cols-3">
-        {AREAS.map((a) => (
-          <div key={a.title} className="card-soft p-6">
-            <a.icon className="size-6 text-gold" />
-            <h2 className="mt-3 font-sans text-base font-semibold text-primary">{a.title}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{a.text}</p>
-          </div>
-        ))}
+    <ProtectedRoute requireAdmin>
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <p className="ornament mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Admin</p>
+        <nav aria-label="Administração" className="-mx-4 mb-8 flex gap-2 overflow-x-auto px-4">
+          {TABS.map((t) => (
+            <Link
+              key={t.to}
+              to={t.to}
+              activeOptions={{ exact: t.exact }}
+              className="focus-ring shrink-0 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:border-gold"
+              activeProps={{ className: "border-primary bg-primary text-primary-foreground hover:border-primary" }}
+            >
+              {t.label}
+            </Link>
+          ))}
+        </nav>
+        <Outlet />
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
-<defs><pattern id="p" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M40 8 L48 32 L72 40 L48 48 L40 72 L32 48 L8 40 L32 32 Z" fill="#8a7f70" opacity=".45"/></pattern></defs>
-<rect width="1600" height="1000" fill="#efe9df"/>
-<rect width="1600" height="1000" fill="url(#p)"/>
-<rect x="24" y="24" width="1552" height="952" fill="none" stroke="#8a7f70" stroke-width="6" rx="12"/>
-<rect x="555.2" y="390.0" width="489.6" height="220" rx="24" fill="#ffffff" opacity=".88"/>
-<text x="800.0" y="510.0" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="84" fill="#2b1a1a">Losangos</text>
-<text x="800.0" y="570.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" letter-spacing="4" fill="#2b1a1a" opacity=".7">GEOMÉTRICO E LISO · ARTE PROVISÓRIA</text>
-</svg>

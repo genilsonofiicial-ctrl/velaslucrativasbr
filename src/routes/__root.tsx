@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
+import { useStudio } from "@/stores/studio";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -131,6 +132,11 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Restaura o trabalho do estúdio salvo neste navegador (depois da hidratação).
+  useEffect(() => {
+    void useStudio.persist.rehydrate();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

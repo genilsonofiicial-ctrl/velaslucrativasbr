@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
-<defs><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="14" height="40" fill="#9cc6dd" opacity=".35"/></pattern></defs>
-<rect width="800" height="1000" fill="#e3f0f7"/>
-<rect width="800" height="1000" fill="url(#p)"/>
-<rect x="24" y="24" width="752" height="952" fill="none" stroke="#9cc6dd" stroke-width="6" rx="12"/>
-<rect x="80.0" y="390.0" width="640" height="220" rx="24" fill="#ffffff" opacity=".88"/>
-<text x="400.0" y="510.0" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#2f5168">Chá de bebê rosa</text>
-<text x="400.0" y="570.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" letter-spacing="4" fill="#2f5168" opacity=".7">BEBÊ · ARTE PROVISÓRIA</text>
-</svg>

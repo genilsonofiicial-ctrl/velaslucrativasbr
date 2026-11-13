@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
-<defs><pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="14" height="40" fill="#8a7f70" opacity=".35"/></pattern></defs>
-<rect width="1600" height="1000" fill="#efe9df"/>
-<rect width="1600" height="1000" fill="url(#p)"/>
-<rect x="24" y="24" width="1552" height="952" fill="none" stroke="#8a7f70" stroke-width="6" rx="12"/>
-<rect x="439.7" y="390.0" width="720.6" height="220" rx="24" fill="#ffffff" opacity=".88"/>
-<text x="800.0" y="510.0" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="84" fill="#2b1a1a">Listras finas</text>
-<text x="800.0" y="570.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" letter-spacing="4" fill="#2b1a1a" opacity=".7">GEOMÉTRICO E LISO · ARTE PROVISÓRIA</text>
-</svg>

@@ -44,6 +44,11 @@
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
   --color-gold-foreground: var(--gold-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-wax: var(--wax);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -90,6 +95,11 @@
   --accent-foreground: var(--wine);
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: var(--cream);
+  --destructive-soft: oklch(0.95 0.035 25);
+  --success: oklch(0.5 0.12 150);
+  --success-foreground: oklch(0.99 0.01 150);
+  --success-soft: oklch(0.95 0.04 150);
+  --wax: oklch(0.965 0.025 85);
   --border: oklch(0.9 0.03 75);
   --input: oklch(0.88 0.035 75);
   --ring: var(--gold);
@@ -168,4 +178,17 @@
 
 @utility pb-safe-nav {
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+}
+
+@utility touch-none-drag {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }

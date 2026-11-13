@@ -17,6 +17,10 @@ import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as GuiaRouteImport } from './routes/guia'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMinhasVelasRouteImport } from './routes/_authenticated/minhas-velas'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
+import { Route as AuthenticatedAdminModelosRouteImport } from './routes/_authenticated/admin.modelos'
+import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +62,29 @@ const AuthenticatedMinhasVelasRoute =
     path: '/minhas-velas',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminMetricasRoute =
+  AuthenticatedAdminMetricasRouteImport.update({
+    id: '/metricas',
+    path: '/metricas',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminModelosRoute =
+  AuthenticatedAdminModelosRouteImport.update({
+    id: '/modelos',
+    path: '/modelos',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUsuariosRoute =
+  AuthenticatedAdminUsuariosRouteImport.update({
+    id: '/usuarios',
+    path: '/usuarios',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,8 +92,12 @@ export interface FileRoutesByFullPath {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
+  '/admin/modelos': typeof AuthenticatedAdminModelosRoute
+  '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -74,8 +105,11 @@ export interface FileRoutesByTo {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
+  '/admin/modelos': typeof AuthenticatedAdminModelosRoute
+  '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,8 +119,12 @@ export interface FileRoutesById {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/_authenticated/admin/metricas': typeof AuthenticatedAdminMetricasRoute
+  '/_authenticated/admin/modelos': typeof AuthenticatedAdminModelosRoute
+  '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,6 +136,10 @@ export interface FileRouteTypes {
     | '/guia'
     | '/admin'
     | '/minhas-velas'
+    | '/admin/metricas'
+    | '/admin/modelos'
+    | '/admin/usuarios'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -105,8 +147,11 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/guia'
-    | '/admin'
     | '/minhas-velas'
+    | '/admin/metricas'
+    | '/admin/modelos'
+    | '/admin/usuarios'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -117,6 +162,10 @@ export interface FileRouteTypes {
     | '/guia'
     | '/_authenticated/admin'
     | '/_authenticated/minhas-velas'
+    | '/_authenticated/admin/metricas'
+    | '/_authenticated/admin/modelos'
+    | '/_authenticated/admin/usuarios'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -186,16 +235,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMinhasVelasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/metricas': {
+      id: '/_authenticated/admin/metricas'
+      path: '/metricas'
+      fullPath: '/admin/metricas'
+      preLoaderRoute: typeof AuthenticatedAdminMetricasRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/modelos': {
+      id: '/_authenticated/admin/modelos'
+      path: '/modelos'
+      fullPath: '/admin/modelos'
+      preLoaderRoute: typeof AuthenticatedAdminModelosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/usuarios': {
+      id: '/_authenticated/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminMetricasRoute: typeof AuthenticatedAdminMetricasRoute
+  AuthenticatedAdminModelosRoute: typeof AuthenticatedAdminModelosRoute
+  AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminMetricasRoute: AuthenticatedAdminMetricasRoute,
+  AuthenticatedAdminModelosRoute: AuthenticatedAdminModelosRoute,
+  AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedMinhasVelasRoute: typeof AuthenticatedMinhasVelasRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedMinhasVelasRoute: AuthenticatedMinhasVelasRoute,
 }
 
