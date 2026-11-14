@@ -35,7 +35,7 @@ use the editor.
 - `profiles.plan` is writable only by the backend: `authenticated` has column-level UPDATE on `email` only, so users cannot upgrade themselves.
 - Signed-in-only pages live under `src/routes/_authenticated/` (client-only gate redirecting to `/entrar`); Estúdio and Biblioteca stay public top-level routes so they work without login.
 - Session state comes from `useAuth` (`src/hooks/useAuth.tsx`), the single `onAuthStateChange` listener; `ProtectedRoute` only decides what to show — RLS protects the data.
-- Storage bucket `templates` is private (workspace blocks public buckets) with an everyone-can-read policy; read files with signed URLs or `storage.download`, not public URLs.
+- Storage bucket `templates` is private with admin-only read; public visitors get signed URLs from `getTemplateFileUrls` (server, active templates only).
 - Layout chrome (header, mobile bottom nav, footer) is mounted once in `src/routes/__root.tsx`; nav items come from `src/components/layout/nav-items.ts`.
 - Candle math lives in pure `src/lib/candle.ts` (tested in `src/test/candle.test.ts`); UI never re-implements formulas, it rounds only for display via `formatCm`.
 - Studio state is one Zustand store (`src/stores/studio.ts`) persisted to localStorage with `skipHydration`, rehydrated once in `__root.tsx` to avoid SSR mismatches; image blobs/object URLs are never persisted.

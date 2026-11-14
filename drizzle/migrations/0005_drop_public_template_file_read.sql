@@ -1,0 +1,1 @@
+drop policy if exists "Anyone reads active template files" on storage.objects;

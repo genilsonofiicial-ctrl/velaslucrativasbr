@@ -36,6 +36,13 @@
       "when": 1794539369475,
       "tag": "0004_restrict_template_file_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794693673576,
+      "tag": "0005_drop_public_template_file_read",
+      "breakpoints": true
     }
   ]
 }

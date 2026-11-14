@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { ArtImage } from "@/lib/art-render";
 import { supabase } from "@/integrations/supabase/client";
 import { useStudio } from "@/stores/studio";
+import { getTemplateFileUrls } from "@/lib/template-files.functions";
 
 export function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -17,8 +18,20 @@ export function loadImage(url: string): Promise<HTMLImageElement> {
 const cache = new Map<string, ArtImage>();
 
 async function blobFromStorage(bucket: "templates" | "user-images", path: string): Promise<Blob> {
-  const { data, error } = await supabase.storage.from(bucket).download(path);
-  if (error || !data) throw new Error("Não foi possível baixar a imagem.");
+  let data: Blob | null = null;
+  if (bucket === "templates") {
+    const urls = await getTemplateFileUrls({ data: { paths: [path] } }).catch(() => ({}) as Record<string, string>);
+    if (urls[path]) {
+      const res = await fetch(urls[path]);
+      if (res.ok) data = await res.blob();
+    } else {
+      // Admins can still read inactive template files directly.
+      data = (await supabase.storage.from(bucket).download(path)).data;
+    }
+  } else {
+    data = (await supabase.storage.from(bucket).download(path)).data;
+  }
+  if (!data) throw new Error("Não foi possível baixar a imagem.");
   if (path.toLowerCase().endsWith(".svg")) {
     return new Blob([await data.arrayBuffer()], { type: "image/svg+xml" });
   }
