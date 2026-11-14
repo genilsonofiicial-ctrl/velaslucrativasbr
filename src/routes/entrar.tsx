@@ -10,10 +10,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { safeRedirect } from "@/lib/safe-redirect";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 export const Route = createFileRoute("/entrar")({
-  validateSearch: (search: Record<string, unknown>): { redirect?: string } =>
-    typeof search["redirect"] === "string" ? { redirect: search["redirect"] } : {},
+  validateSearch: (search: Record<string, unknown>): { redirect?: string; next?: string } => ({
+    ...(typeof search["redirect"] === "string" ? { redirect: search["redirect"] } : {}),
+    ...(typeof search["next"] === "string" ? { next: search["next"] } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Entrar — Stúdio Velas Lucrativas" },
@@ -29,8 +32,8 @@ export const Route = createFileRoute("/entrar")({
 });
 
 function Entrar() {
-  const { redirect } = Route.useSearch();
-  const destino = safeRedirect(redirect);
+  const { redirect, next } = Route.useSearch();
+  const destino = next !== undefined ? oauthReturnPath(next) : safeRedirect(redirect);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -89,7 +92,7 @@ function MagicLinkForm({ destino }: { destino: string }) {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: window.location.origin + destino },
+      options: { emailRedirectTo: new URL(destino, window.location.origin).href },
     });
     setLoading(false);
     if (error) {
@@ -140,6 +143,7 @@ function MagicLinkForm({ destino }: { destino: string }) {
 }
 
 function PasswordForm({ destino }: { destino: string }) {
+  const navigate = useNavigate();
   const [modo, setModo] = useState<"entrar" | "criar">("entrar");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -152,13 +156,17 @@ function PasswordForm({ destino }: { destino: string }) {
     if (modo === "entrar") {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
       setLoading(false);
-      if (error) toast.error("E-mail ou senha incorretos.");
+      if (error) {
+        toast.error("E-mail ou senha incorretos.");
+        return;
+      }
+      await navigate({ to: destino, replace: true });
       return;
     }
     const { data, error } = await supabase.auth.signUp({
       email,
       password: senha,
-      options: { emailRedirectTo: window.location.origin + destino },
+      options: { emailRedirectTo: new URL(destino, window.location.origin).href },
     });
     setLoading(false);
     if (error) {

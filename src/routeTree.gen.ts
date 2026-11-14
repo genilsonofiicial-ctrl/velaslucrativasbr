@@ -15,8 +15,11 @@ import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as GuiaRouteImport } from './routes/guia'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMinhasVelasRouteImport } from './routes/_authenticated/minhas-velas'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
 import { Route as AuthenticatedAdminModelosRouteImport } from './routes/_authenticated/admin.modelos'
@@ -51,6 +54,17 @@ const GuiaRoute = GuiaRouteImport.update({
   path: '/guia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -62,6 +76,11 @@ const AuthenticatedMinhasVelasRoute =
     path: '/minhas-velas',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -92,8 +111,11 @@ export interface FileRoutesByFullPath {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/admin/modelos': typeof AuthenticatedAdminModelosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -105,7 +127,10 @@ export interface FileRoutesByTo {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/admin/modelos': typeof AuthenticatedAdminModelosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -119,8 +144,11 @@ export interface FileRoutesById {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/_authenticated/admin/modelos': typeof AuthenticatedAdminModelosRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -134,8 +162,11 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/guia'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/minhas-velas'
+    | '/.lovable/oauth/consent'
     | '/admin/metricas'
     | '/admin/modelos'
     | '/admin/usuarios'
@@ -147,7 +178,10 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/guia'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/minhas-velas'
+    | '/.lovable/oauth/consent'
     | '/admin/metricas'
     | '/admin/modelos'
     | '/admin/usuarios'
@@ -160,8 +194,11 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/guia'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/minhas-velas'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/admin/metricas'
     | '/_authenticated/admin/modelos'
     | '/_authenticated/admin/usuarios'
@@ -175,6 +212,9 @@ export interface RootRouteChildren {
   EntrarRoute: typeof EntrarRoute
   EstudioRoute: typeof EstudioRoute
   GuiaRoute: typeof GuiaRoute
+  McpRoute: typeof McpRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -221,6 +261,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuiaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -234,6 +288,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/minhas-velas'
       preLoaderRoute: typeof AuthenticatedMinhasVelasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -303,6 +364,10 @@ const rootRouteChildren: RootRouteChildren = {
   EntrarRoute: EntrarRoute,
   EstudioRoute: EstudioRoute,
   GuiaRoute: GuiaRoute,
+  McpRoute: McpRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

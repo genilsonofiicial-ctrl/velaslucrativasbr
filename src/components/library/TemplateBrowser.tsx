@@ -12,8 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { THEMES, activeTemplatesQuery, filterTemplates, type TemplateWithUrl } from "@/lib/templates";
+import { THEMES, activeTemplatesQuery, filterTemplates, type TemplateFilters, type TemplateWithUrl } from "@/lib/templates";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 import { cn } from "@/lib/utils";
+import { useWebMCP } from "use-webmcp-tool";
 import { TemplateDetailDialog } from "./TemplateDetailDialog";
 
 const ALL = "__todas";
@@ -44,6 +46,58 @@ export function TemplateBrowser({
   );
   const hasFilters = !!(theme || occasion || search);
 
+  function changeFilters(patch: Partial<TemplateFilters>) {
+    if (patch.theme !== undefined) setTheme(patch.theme);
+    if (patch.occasion !== undefined) setOccasion(patch.occasion);
+    if (patch.search !== undefined) setSearch(patch.search);
+  }
+
+  useWebMCP({
+    name: "list_visible_templates",
+    description: "Lista os modelos atualmente visíveis na biblioteca, respeitando os filtros ativos.",
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    enabled: !isLoading && !isError,
+    execute: () => runWebMCPTool("list_visible_templates", () =>
+      list.length === 0
+        ? "Nenhum modelo visível com os filtros atuais."
+        : list.map((t) => `${t.id}: ${t.title} — ${t.theme ?? "sem tema"}${t.is_premium ? " — Pro" : ""}`).join("\n"),
+    ),
+  });
+
+  useWebMCP({
+    name: "filter_templates",
+    description: "Altera os filtros visíveis da biblioteca por tema, ocasião e texto de busca.",
+    annotations: { untrustedContentHint: true },
+    enabled: !isLoading && !isError,
+    inputSchema: {
+      type: "object",
+      properties: {
+        theme: { type: "string", description: "Tema exato ou texto vazio para todos." },
+        occasion: { type: "string", description: "Ocasião exata disponível ou texto vazio para todas." },
+        search: { type: "string", description: "Texto livre buscado em título, tema, ocasião e etiquetas." },
+      },
+    },
+    execute: (args: { theme?: string; occasion?: string; search?: string }) => runWebMCPTool("filter_templates", () => {
+      if (args.theme !== undefined && (typeof args.theme !== "string" || (args.theme !== "" && !THEMES.includes(args.theme as (typeof THEMES)[number])))) {
+        throw new Error("Tema desconhecido; use um tema da biblioteca ou texto vazio.");
+      }
+      if (args.occasion !== undefined && (typeof args.occasion !== "string" || (args.occasion !== "" && !occasions.includes(args.occasion)))) {
+        throw new Error("Ocasião desconhecida; use uma ocasião da biblioteca ou texto vazio.");
+      }
+      if (args.search !== undefined && typeof args.search !== "string") {
+        throw new Error("A busca deve ser um texto.");
+      }
+      const next = {
+        theme: args.theme ?? theme,
+        occasion: args.occasion ?? occasion,
+        search: args.search ?? search,
+      };
+      const count = filterTemplates(data ?? [], next).length;
+      changeFilters(args);
+      return `Filtros atualizados; ${count} modelo(s) visível(is).`;
+    }),
+  });
+
   return (
     <div>
       <div className="flex flex-col gap-3 sm:flex-row">
@@ -54,11 +108,11 @@ export function TemplateBrowser({
             placeholder="Buscar modelo (ex.: rosas, estrelas)"
             aria-label="Buscar modelo"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => changeFilters({ search: e.target.value })}
             className="h-11 rounded-full pl-10"
           />
         </div>
-        <Select value={occasion || ALL} onValueChange={(v) => setOccasion(v === ALL ? "" : v)}>
+        <Select value={occasion || ALL} onValueChange={(v) => changeFilters({ occasion: v === ALL ? "" : v })}>
           <SelectTrigger className="h-11 rounded-full sm:w-56" aria-label="Ocasião">
             <SelectValue placeholder="Ocasião" />
           </SelectTrigger>
@@ -79,7 +133,7 @@ export function TemplateBrowser({
             key={t || "todos"}
             size="sm"
             variant={t === theme ? "wine" : "outline"}
-            onClick={() => setTheme(t)}
+            onClick={() => changeFilters({ theme: t })}
             className="shrink-0"
             aria-pressed={t === theme}
           >
@@ -119,11 +173,7 @@ export function TemplateBrowser({
               <Button
                 variant="outline"
                 className="mt-4"
-                onClick={() => {
-                  setTheme("");
-                  setOccasion("");
-                  setSearch("");
-                }}
+                onClick={() => changeFilters({ theme: "", occasion: "", search: "" })}
               >
                 <X /> Limpar filtros
               </Button>

@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "sdk_version": "3.5.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://sqigmmtcmbvrnfrhcuam.supabase.co/auth/v1",
+    "require_oauth_client_claim": true,
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "velaslucrativasbr",
+      "version": "0.1.0",
+      "title": "Velaslucrativasbr"
+    },
+    "tools": [
+      {
+        "name": "calculate_candle",
+        "title": "Calcular arte da vela",
+        "description": "Calcula a largura e a altura reais da arte e verifica se ela cabe na folha escolhida.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "diameterCm": {
+              "type": "number",
+              "minimum": 2,
+              "maximum": 20,
+              "description": "Diâmetro da vela em centímetros."
+            },
+            "heightCm": {
+              "type": "number",
+              "minimum": 3,
+              "maximum": 40,
+              "description": "Altura da vela em centímetros."
+            },
+            "marginCm": {
+              "description": "Margem livre em cada lado; padrão 0,5 cm.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 3
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "wrap",
+                "front"
+              ],
+              "description": "wrap envolve a vela inteira; front cobre apenas um arco da frente."
+            },
+            "arcDegrees": {
+              "description": "Arco coberto no modo front; padrão 120 graus.",
+              "type": "number",
+              "minimum": 60,
+              "maximum": 240
+            },
+            "sheet": {
+              "type": "string",
+              "enum": [
+                "A4",
+                "LETTER"
+              ],
+              "description": "Tamanho da folha de impressão."
+            },
+            "printerMarginCm": {
+              "description": "Margem reservada em cada borda da folha; padrão 1 cm.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "diameterCm",
+            "heightCm",
+            "mode",
+            "sheet"
+          ],
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_templates",
+        "title": "Listar modelos de estampa",
+        "description": "Lista até 50 modelos ativos da biblioteca, com filtros opcionais de tema e ocasião.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "theme": {
+              "description": "Tema exato, como Natal, Casamento ou Bebê.",
+              "type": "string"
+            },
+            "occasion": {
+              "description": "Ocasião exata cadastrada no modelo.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_projects",
+        "title": "Listar minhas velas",
+        "description": "Lista até 50 projetos salvos da conta autorizada, sem expor projetos de outros usuários.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_my_project",
+        "title": "Abrir uma vela salva",
+        "description": "Lê as medidas e o ajuste de arte de um projeto da conta autorizada pelo identificador.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "projectId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "Identificador do projeto retornado por list_my_projects."
+            }
+          },
+          "required": [
+            "projectId"
+          ],
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

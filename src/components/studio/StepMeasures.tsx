@@ -6,8 +6,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Slider } from "@/components/ui/slider";
 import { LIMITS, formatCm, type Mode, type Sheet } from "@/lib/candle";
 import { track } from "@/lib/analytics";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 import { cn } from "@/lib/utils";
-import { PRESETS, useCandleCalc, useStudio } from "@/stores/studio";
+import { calcFromInputs, PRESETS, useCandleCalc, useStudio, type StudioInputs } from "@/stores/studio";
+import { useWebMCP } from "use-webmcp-tool";
 import { CmField } from "./CmField";
 import { FitBadge } from "./FitBadge";
 
@@ -28,6 +30,87 @@ export function StepMeasures() {
   const toggleCircumference = useStudio((s) => s.toggleCircumference);
   const setStep = useStudio((s) => s.setStep);
   const calc = useCandleCalc();
+
+  function changeInputs(patch: Partial<StudioInputs>) {
+    setInputs(patch);
+  }
+
+  useWebMCP({
+    name: "get_candle_measurements",
+    description: "Lê as medidas atuais da etapa Medidas e o resultado do cálculo sem alterar a tela.",
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    execute: () => runWebMCPTool("get_candle_measurements", () => {
+      const base = `Diâmetro: ${inputs.diameterText} cm; altura: ${inputs.heightText} cm; margem: ${inputs.marginText} cm; modo: ${inputs.mode}; folha: ${inputs.sheet}.`;
+      if (!calc.ok) return `${base} Corrija: ${calc.errors.join(" ")}`;
+      return `${base} Arte: ${formatCm(calc.result.artWidth)} × ${formatCm(calc.result.artHeight)} cm; circunferência: ${formatCm(calc.result.circumference)} cm; cabe na folha: ${calc.result.fits ? "sim" : "não"}.`;
+    }),
+  });
+
+  useWebMCP({
+    name: "set_candle_measurements",
+    description: "Atualiza as medidas visíveis da vela depois de validar todos os valores informados.",
+    annotations: { untrustedContentHint: true },
+    inputSchema: {
+      type: "object",
+      properties: {
+        diameter_cm: { type: "number", description: "Novo diâmetro em centímetros, de 2 a 20." },
+        height_cm: { type: "number", description: "Nova altura em centímetros, de 3 a 40." },
+        margin_cm: { type: "number", description: "Nova margem de segurança em centímetros, de 0 a 3." },
+        mode: { type: "string", enum: ["wrap", "front"], description: "wrap para a volta inteira ou front para só a frente." },
+        arc_degrees: { type: "number", description: "Novo arco em graus, de 60 a 240." },
+        sheet: { type: "string", enum: ["A4", "LETTER"], description: "Folha A4 ou Carta." },
+        printer_margin_cm: { type: "number", description: "Nova margem da folha em centímetros, de 0 a 5." },
+      },
+    },
+    execute: (args: {
+      diameter_cm?: number;
+      height_cm?: number;
+      margin_cm?: number;
+      mode?: Mode;
+      arc_degrees?: number;
+      sheet?: Sheet;
+      printer_margin_cm?: number;
+    }) => runWebMCPTool("set_candle_measurements", () => {
+      const patch: Partial<StudioInputs> = {};
+      const numberPatch = (
+        value: unknown,
+        key: "diameterText" | "heightText" | "marginText" | "printerMarginText",
+        min: number,
+        max: number,
+        label: string,
+      ) => {
+        if (value === undefined) return;
+        if (typeof value !== "number" || !Number.isFinite(value) || value < min || value > max) {
+          throw new Error(`${label} deve ser um número entre ${min} e ${max}.`);
+        }
+        patch[key] = String(value).replace(".", ",");
+      };
+      numberPatch(args.diameter_cm, "diameterText", LIMITS.diameter.min, LIMITS.diameter.max, "O diâmetro");
+      if (args.diameter_cm !== undefined) patch.useCircumference = false;
+      numberPatch(args.height_cm, "heightText", LIMITS.height.min, LIMITS.height.max, "A altura");
+      numberPatch(args.margin_cm, "marginText", LIMITS.margin.min, LIMITS.margin.max, "A margem");
+      numberPatch(args.printer_margin_cm, "printerMarginText", LIMITS.printerMargin.min, LIMITS.printerMargin.max, "A margem da folha");
+      if (args.mode !== undefined) {
+        if (args.mode !== "wrap" && args.mode !== "front") throw new Error("Modo desconhecido; use wrap ou front.");
+        patch.mode = args.mode;
+      }
+      if (args.sheet !== undefined) {
+        if (args.sheet !== "A4" && args.sheet !== "LETTER") throw new Error("Folha desconhecida; use A4 ou LETTER.");
+        patch.sheet = args.sheet;
+      }
+      if (args.arc_degrees !== undefined) {
+        if (typeof args.arc_degrees !== "number" || !Number.isFinite(args.arc_degrees) || args.arc_degrees < LIMITS.arc.min || args.arc_degrees > LIMITS.arc.max) {
+          throw new Error(`O arco deve ficar entre ${LIMITS.arc.min} e ${LIMITS.arc.max} graus.`);
+        }
+        patch.arcDegrees = args.arc_degrees;
+      }
+      const next = { ...inputs, ...patch };
+      const nextCalc = calcFromInputs(next);
+      if (!nextCalc.ok) throw new Error(nextCalc.errors.join(" "));
+      changeInputs(patch);
+      return `Medidas atualizadas. Arte: ${formatCm(nextCalc.result.artWidth)} × ${formatCm(nextCalc.result.artHeight)} cm; cabe na folha: ${nextCalc.result.fits ? "sim" : "não"}.`;
+    }),
+  });
 
   // calc_completed: uma vez por combinação válida, depois que a pessoa para de digitar.
   const lastTracked = useRef<string | null>(null);
@@ -77,7 +160,7 @@ export function StepMeasures() {
                 id="diametro"
                 label={inputs.useCircumference ? "Circunferência" : "Diâmetro"}
                 value={inputs.diameterText}
-                onChange={(v) => setInputs({ diameterText: v })}
+                onChange={(v) => changeInputs({ diameterText: v })}
               />
               <button
                 type="button"
@@ -92,13 +175,13 @@ export function StepMeasures() {
               id="altura"
               label="Altura"
               value={inputs.heightText}
-              onChange={(v) => setInputs({ heightText: v })}
+              onChange={(v) => changeInputs({ heightText: v })}
             />
             <CmField
               id="margem"
               label="Margem de segurança"
               value={inputs.marginText}
-              onChange={(v) => setInputs({ marginText: v })}
+              onChange={(v) => changeInputs({ marginText: v })}
             />
           </div>
 
@@ -122,7 +205,7 @@ export function StepMeasures() {
                   type="button"
                   role="radio"
                   aria-checked={active}
-                  onClick={() => setInputs({ mode: m.value, presetId: inputs.presetId })}
+                  onClick={() => changeInputs({ mode: m.value, presetId: inputs.presetId })}
                   className={cn(
                     "focus-ring rounded-2xl border-2 p-4 text-left transition-colors",
                     active ? "border-gold bg-accent" : "border-border bg-card hover:border-gold/50",
@@ -152,7 +235,7 @@ export function StepMeasures() {
                 max={LIMITS.arc.max}
                 step={5}
                 value={[inputs.arcDegrees]}
-                onValueChange={([v]) => v !== undefined && setInputs({ arcDegrees: v, presetId: inputs.presetId })}
+                onValueChange={([v]) => v !== undefined && changeInputs({ arcDegrees: v, presetId: inputs.presetId })}
                 aria-label="Ângulo da arte"
               />
               <div className="mt-2 flex justify-between text-xs text-muted-foreground">
@@ -174,7 +257,7 @@ export function StepMeasures() {
                   type="button"
                   role="radio"
                   aria-checked={active}
-                  onClick={() => setInputs({ sheet: o.value, presetId: inputs.presetId })}
+                  onClick={() => changeInputs({ sheet: o.value, presetId: inputs.presetId })}
                   className={cn(
                     "focus-ring rounded-2xl border-2 p-4 text-left transition-colors",
                     active ? "border-gold bg-accent" : "border-border bg-card hover:border-gold/50",
@@ -197,7 +280,7 @@ export function StepMeasures() {
                 id="margem-folha"
                 label="Margem da folha/fita"
                 value={inputs.printerMarginText}
-                onChange={(v) => setInputs({ printerMarginText: v, presetId: inputs.presetId })}
+                onChange={(v) => changeInputs({ printerMarginText: v, presetId: inputs.presetId })}
               />
               <p className="text-xs text-muted-foreground">
                 Espaço em cada borda da folha para a fita e a impressora. Padrão: 1 cm.

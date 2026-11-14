@@ -44,3 +44,4 @@ use the editor.
 - Plan rules (free monthly export limit, premium templates) live in `src/lib/plan.ts`; monthly export count comes from the `export_count_this_month` RPC because events are admin-read-only.
 - Admin dashboards read aggregates through security-definer RPCs (`admin_metrics`, `admin_set_plan`) that check `has_role` first; plan changes never go through a client-writable column.
 - Usage events go through `track()` in `src/lib/analytics.ts`, which never throws and stores an anonymous session id in localStorage.
+- Agent integrations live in `src/lib/mcp/` with OAuth caller-scoped clients; browser WebMCP tools stay in their owning components and share UI actions so external access follows the same RLS and permissions.
