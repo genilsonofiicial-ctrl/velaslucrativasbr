@@ -19,6 +19,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMinhasVelasRouteImport } from './routes/_authenticated/minhas-velas'
+import { Route as BibliotecaIdRouteImport } from './routes/biblioteca_.$id'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
@@ -76,6 +77,11 @@ const AuthenticatedMinhasVelasRoute =
     path: '/minhas-velas',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const BibliotecaIdRoute = BibliotecaIdRouteImport.update({
+  id: '/biblioteca_/$id',
+  path: '/biblioteca/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/biblioteca/$id': typeof BibliotecaIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/admin/modelos': typeof AuthenticatedAdminModelosRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/biblioteca/$id': typeof BibliotecaIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/admin/modelos': typeof AuthenticatedAdminModelosRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/minhas-velas': typeof AuthenticatedMinhasVelasRoute
+  '/biblioteca_/$id': typeof BibliotecaIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/_authenticated/admin/modelos': typeof AuthenticatedAdminModelosRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/minhas-velas'
+    | '/biblioteca/$id'
     | '/.lovable/oauth/consent'
     | '/admin/metricas'
     | '/admin/modelos'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
     | '/minhas-velas'
+    | '/biblioteca/$id'
     | '/.lovable/oauth/consent'
     | '/admin/metricas'
     | '/admin/modelos'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/minhas-velas'
+    | '/biblioteca_/$id'
     | '/.lovable/oauth/consent'
     | '/_authenticated/admin/metricas'
     | '/_authenticated/admin/modelos'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   GuiaRoute: typeof GuiaRoute
   McpRoute: typeof McpRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  BibliotecaIdRoute: typeof BibliotecaIdRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
@@ -288,6 +301,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/minhas-velas'
       preLoaderRoute: typeof AuthenticatedMinhasVelasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/biblioteca_/$id': {
+      id: '/biblioteca_/$id'
+      path: '/biblioteca/$id'
+      fullPath: '/biblioteca/$id'
+      preLoaderRoute: typeof BibliotecaIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  BibliotecaIdRoute: BibliotecaIdRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport

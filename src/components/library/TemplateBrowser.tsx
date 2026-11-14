@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, Crown, ImageOff, Search, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { AlertCircle, ImageOff, Lock, Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,26 +13,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { THEMES, activeTemplatesQuery, filterTemplates, type TemplateFilters, type TemplateWithUrl } from "@/lib/templates";
+import { THEMES, activeTemplatesQuery, filterTemplates, isPackReady, type TemplateFilters } from "@/lib/templates";
+import { ComingSoon } from "./ComingSoon";
 import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 import { cn } from "@/lib/utils";
 import { useWebMCP } from "use-webmcp-tool";
-import { TemplateDetailDialog } from "./TemplateDetailDialog";
 
 const ALL = "__todas";
 
-export function TemplateBrowser({
-  onUse,
-  selectedId,
-}: {
-  onUse: (t: TemplateWithUrl) => void;
-  selectedId?: string | null | undefined;
-}) {
+export function TemplateBrowser({ selectedId }: { selectedId?: string | null | undefined }) {
   const { data, isLoading, isError, refetch } = useQuery(activeTemplatesQuery);
   const [theme, setTheme] = useState("");
   const [occasion, setOccasion] = useState("");
   const [search, setSearch] = useState("");
-  const [open, setOpen] = useState<TemplateWithUrl | null>(null);
 
   const occasions = useMemo(
     () =>
@@ -60,7 +54,7 @@ export function TemplateBrowser({
     execute: () => runWebMCPTool("list_visible_templates", () =>
       list.length === 0
         ? "Nenhum modelo visível com os filtros atuais."
-        : list.map((t) => `${t.id}: ${t.title} — ${t.theme ?? "sem tema"}${t.is_premium ? " — Pro" : ""}`).join("\n"),
+        : list.map((t) => `${t.id}: ${t.title} — ${t.theme ?? "sem tema"}${t.is_premium ? " — Premium" : ""} — ${t.images.length} estampa(s)`).join("\n"),
     ),
   });
 
@@ -105,8 +99,8 @@ export function TemplateBrowser({
           <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Buscar modelo (ex.: rosas, estrelas)"
-            aria-label="Buscar modelo"
+            placeholder="Buscar pack (ex.: rosas, estrelas)"
+            aria-label="Buscar pack"
             value={search}
             onChange={(e) => changeFilters({ search: e.target.value })}
             className="h-11 rounded-full pl-10"
@@ -158,7 +152,7 @@ export function TemplateBrowser({
         ) : isError ? (
           <div className="card-soft flex flex-col items-center p-10 text-center">
             <AlertCircle className="size-10 text-destructive" />
-            <p className="mt-3 font-semibold text-primary">Não conseguimos carregar os modelos.</p>
+            <p className="mt-3 font-semibold text-primary">Não conseguimos carregar os packs.</p>
             <p className="text-sm text-muted-foreground">Confira sua internet e tente de novo.</p>
             <Button variant="outline" className="mt-4" onClick={() => refetch()}>
               Tentar de novo
@@ -167,7 +161,7 @@ export function TemplateBrowser({
         ) : list.length === 0 ? (
           <div className="card-soft flex flex-col items-center p-10 text-center">
             <ImageOff className="size-10 text-gold" />
-            <p className="mt-3 font-display text-xl text-primary">Nenhum modelo encontrado</p>
+            <p className="mt-3 font-display text-xl text-primary">Nenhum pack encontrado</p>
             <p className="text-sm text-muted-foreground">Tente outra palavra ou limpe os filtros.</p>
             {hasFilters && (
               <Button
@@ -182,48 +176,56 @@ export function TemplateBrowser({
         ) : (
           <>
             <p className="mb-3 text-sm text-muted-foreground">
-              {list.length} {list.length === 1 ? "modelo" : "modelos"}
+              {list.length} {list.length === 1 ? "pack" : "packs"}
             </p>
             <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
               {list.map((t) => (
                 <li key={t.id}>
-                  <button
-                    type="button"
-                    onClick={() => setOpen(t)}
+                  <Link
+                    to="/biblioteca/$id"
+                    params={{ id: t.id }}
                     className={cn(
                       "focus-ring card-soft group block w-full overflow-hidden text-left transition-shadow hover:shadow-lift",
                       selectedId === t.id && "ring-2 ring-gold",
                     )}
                   >
                     <div className="relative aspect-[4/3] bg-muted">
-                      {t.thumbUrl ? (
+                      {t.coverUrl ? (
                         <img
-                          src={t.thumbUrl}
-                          alt={`Miniatura do modelo ${t.title}`}
+                          src={t.coverUrl}
+                          alt={`Capa do pack ${t.title}`}
                           loading="lazy"
                           decoding="async"
                           className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex size-full items-center justify-center text-muted-foreground">
-                          <ImageOff className="size-6" />
-                        </div>
+                        <ComingSoon />
                       )}
-                      {t.is_premium && (
-                        <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-card px-2.5 py-1 text-xs font-semibold text-primary shadow-soft">
-                          <Crown className="size-3 text-gold" /> Pro
+                      <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-card px-2.5 py-1 text-xs font-semibold text-primary shadow-soft">
+                        {t.is_premium ? (
+                          <>
+                            <Lock className="size-3 text-gold" /> Premium
+                          </>
+                        ) : (
+                          "Grátis"
+                        )}
+                      </span>
+                      {!isPackReady(t) && (
+                        <span className="absolute left-2 top-2 rounded-full bg-gold px-2.5 py-1 text-xs font-semibold text-foreground">
+                          Em breve
                         </span>
                       )}
                     </div>
                     <div className="p-3">
                       <p className="line-clamp-1 text-sm font-semibold text-foreground">{t.title}</p>
-                      {t.theme && (
-                        <span className="mt-1 inline-block rounded-full bg-accent px-2 py-0.5 text-[11px] font-medium text-primary">
-                          {t.theme}
-                        </span>
-                      )}
+                      <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
+                        {t.theme && (
+                          <span className="rounded-full bg-accent px-2 py-0.5 font-medium text-primary">{t.theme}</span>
+                        )}
+                        {t.images.length} {t.images.length === 1 ? "estampa" : "estampas"}
+                      </p>
                     </div>
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -231,14 +233,6 @@ export function TemplateBrowser({
         )}
       </div>
 
-      <TemplateDetailDialog
-        template={open}
-        onClose={() => setOpen(null)}
-        onUse={(t) => {
-          setOpen(null);
-          onUse(t);
-        }}
-      />
     </div>
   );
 }

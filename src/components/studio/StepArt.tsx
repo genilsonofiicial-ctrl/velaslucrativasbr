@@ -11,12 +11,12 @@ import { track } from "@/lib/analytics";
 import { LOW_DPI_THRESHOLD, MSG_LOW_DPI, effectiveDpi } from "@/lib/candle";
 import { extensionFor, validateImageFile } from "@/lib/upload";
 import { useCandleCalc, useStudio } from "@/stores/studio";
+import { PackStrip } from "./PackStrip";
 
 export function StepArt() {
   const template = useStudio((s) => s.template);
   const custom = useStudio((s) => s.custom);
   const inputs = useStudio((s) => s.inputs);
-  const selectTemplate = useStudio((s) => s.selectTemplate);
   const setCustom = useStudio((s) => s.setCustom);
   const setCustomPath = useStudio((s) => s.setCustomPath);
   const setStep = useStudio((s) => s.setStep);
@@ -87,7 +87,7 @@ export function StepArt() {
             </p>
             {template?.isPremium && (
               <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                <Crown className="size-3 text-gold" /> Modelo Pro
+                <Crown className="size-3 text-gold" /> Pack premium
               </span>
             )}
             {art.error && <p className="text-sm text-destructive">{art.error}</p>}
@@ -124,33 +124,12 @@ export function StepArt() {
         </p>
       )}
 
+      <PackStrip />
+
       <section>
-        <h2 className="mb-3 text-xl font-semibold text-primary">Ou escolha um modelo</h2>
-        <TemplateBrowser
-          selectedId={template?.id}
-          onUse={(t) => {
-            if (!t.image_path) {
-              toast.error("Este modelo está sem imagem.");
-              return;
-            }
-            selectTemplate({
-              id: t.id,
-              title: t.title,
-              theme: t.theme,
-              imagePath: t.image_path,
-              isPremium: t.is_premium,
-            });
-            track("template_selected", {
-              template_id: t.id,
-              template_title: t.title,
-              theme: t.theme,
-              premium: t.is_premium,
-              mode: inputs.mode,
-              sheet: inputs.sheet,
-            });
-            setStep(3);
-          }}
-        />
+        <h2 className="mb-1 text-xl font-semibold text-primary">Ou escolha um pack</h2>
+        <p className="mb-3 text-sm text-muted-foreground">Abra um pack e toque em “Usar no estúdio” na estampa que quiser.</p>
+        <TemplateBrowser selectedId={template?.packId ?? template?.id} />
       </section>
 
       <div className="flex justify-between gap-3">

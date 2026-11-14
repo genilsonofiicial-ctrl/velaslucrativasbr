@@ -4,6 +4,7 @@ import type { ArtImage } from "@/lib/art-render";
 import { supabase } from "@/integrations/supabase/client";
 import { useStudio } from "@/stores/studio";
 import { getTemplateFileUrls } from "@/lib/template-files.functions";
+import { getPackImageUrls } from "@/lib/packs.functions";
 
 export function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -57,7 +58,9 @@ export function useArtImage(): State {
         ? `p:${custom.path}`
         : null
     : template
-      ? `t:${template.imagePath}`
+      ? template.imageId
+        ? `i:${template.imageId}`
+        : `t:${template.imagePath}`
       : null;
 
   const [state, setState] = useState<State>({ key: null, image: null, loading: false, error: null });
@@ -80,6 +83,19 @@ export function useArtImage(): State {
         url = custom.objectUrl;
       } else if (custom?.path) {
         url = URL.createObjectURL(await blobFromStorage("user-images", custom.path));
+      } else if (template?.packId && template.imageId) {
+        const r = await getPackImageUrls({ data: { packId: template.packId, imageIds: [template.imageId] } }).catch((e: unknown) => {
+          throw new Error(
+            e instanceof Error && e.message.includes("PREMIUM")
+              ? "Esta estampa é de um pack premium."
+              : "Entre com seu e-mail para usar esta estampa.",
+          );
+        });
+        const signed = r.images[0]?.url;
+        if (!signed) throw new Error("Não foi possível abrir a estampa.");
+        const res = await fetch(signed);
+        if (!res.ok) throw new Error("Não foi possível baixar a estampa.");
+        url = URL.createObjectURL(await res.blob());
       } else if (template) {
         url = URL.createObjectURL(await blobFromStorage("templates", template.imagePath));
       } else {

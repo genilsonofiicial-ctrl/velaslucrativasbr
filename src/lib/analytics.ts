@@ -12,7 +12,15 @@ export type EventName =
   | "canva_clicked"
   | "project_saved"
   | "paywall_seen"
-  | "pro_clicked";
+  | "pro_clicked"
+  | "pack_viewed"
+  | "pack_signup_started"
+  | "pack_signup_completed"
+  | "pack_email_sent"
+  | "pack_downloaded"
+  | "pack_image_to_studio"
+  | "pack_image_switched_in_studio"
+  | "unlock_clicked";
 
 /** ID anônimo da visita, guardado no navegador. */
 export function getSessionId(): string {

@@ -10,49 +10,73 @@ export const THEMES = [
   "Casamento",
   "Bebê",
   "Aniversário e festa",
-  "Datas especiais",
+  "Dia das Mães",
+  "Dia dos Namorados",
+  "Páscoa",
+  "Floral",
   "Geométrico e liso",
 ] as const;
 
 export type TemplateRow = Tables<"templates">;
-export type TemplateWithUrl = TemplateRow & { thumbUrl: string | null };
+export type PackImageRow = Tables<"template_images">;
+export type PackImage = PackImageRow & { thumbUrl: string | null };
+export type Pack = TemplateRow & { coverUrl: string | null; thumbUrl: string | null; images: PackImage[] };
+/** @deprecated nome antigo; um modelo agora é um pack. */
+export type TemplateWithUrl = Pack;
 
-async function withSignedUrls(rows: TemplateRow[], admin = false): Promise<TemplateWithUrl[]> {
-  const paths = Array.from(
-    new Set(rows.map((r) => r.thumb_path || r.image_path).filter((p): p is string => !!p)),
-  );
+/** Pack está pronto para uso quando tem capa e pelo menos uma estampa ativa. */
+export function isPackReady(p: Pick<Pack, "cover_path" | "images">): boolean {
+  return !!p.cover_path && p.images.some((i) => i.is_active);
+}
+
+async function withUrls(rows: (TemplateRow & { template_images: PackImageRow[] | null })[], admin: boolean): Promise<Pack[]> {
+  const paths = new Set<string>();
+  for (const r of rows) {
+    if (r.cover_path) paths.add(r.cover_path);
+    for (const i of r.template_images ?? []) if (i.thumb_path) paths.add(i.thumb_path);
+  }
   const urls = new Map<string, string>();
-  if (paths.length > 0 && !admin) {
-    const signed = await getTemplateFileUrls({ data: { paths } });
-    for (const [k, v] of Object.entries(signed)) urls.set(k, v);
-  } else if (paths.length > 0) {
-    const { data, error } = await supabase.storage.from("templates").createSignedUrls(paths, 60 * 60);
-    if (error) throw new Error("Não foi possível carregar as imagens dos modelos.");
-    for (const item of data ?? []) {
-      if (item.path && item.signedUrl) urls.set(item.path, item.signedUrl);
+  const list = Array.from(paths);
+  if (list.length > 0) {
+    if (admin) {
+      const { data, error } = await supabase.storage.from("templates").createSignedUrls(list, 60 * 60);
+      if (error) throw new Error("Não foi possível carregar as imagens.");
+      for (const s of data ?? []) if (s.path && s.signedUrl) urls.set(s.path, s.signedUrl);
+    } else {
+      const signed = await getTemplateFileUrls({ data: { paths: list } });
+      for (const [k, v] of Object.entries(signed)) urls.set(k, v);
     }
   }
-  return rows.map((r) => ({ ...r, thumbUrl: urls.get(r.thumb_path || r.image_path || "") ?? null }));
+  return rows.map(({ template_images, ...r }) => {
+    const images = (template_images ?? [])
+      .filter((i) => admin || i.is_active)
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((i) => ({ ...i, thumbUrl: i.thumb_path ? (urls.get(i.thumb_path) ?? null) : null }));
+    const coverUrl = r.cover_path ? (urls.get(r.cover_path) ?? null) : null;
+    return { ...r, images, coverUrl, thumbUrl: coverUrl };
+  });
 }
 
-export async function fetchActiveTemplates(): Promise<TemplateWithUrl[]> {
+export async function fetchActiveTemplates(): Promise<Pack[]> {
   const { data, error } = await supabase
     .from("templates")
-    .select("*")
+    .select("*, template_images(*)")
     .eq("is_active", true)
-    .order("is_premium", { ascending: true })
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
-  if (error) throw new Error("Não foi possível carregar os modelos. Tente de novo.");
-  return withSignedUrls(data ?? []);
+  if (error) throw new Error("Não foi possível carregar os packs. Tente de novo.");
+  return withUrls(data ?? [], false);
 }
 
-export async function fetchAllTemplates(): Promise<TemplateWithUrl[]> {
+export async function fetchAllTemplates(): Promise<Pack[]> {
   const { data, error } = await supabase
     .from("templates")
-    .select("*")
+    .select("*, template_images(*)")
+    .order("is_active", { ascending: false })
+    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
-  if (error) throw new Error("Não foi possível carregar os modelos.");
-  return withSignedUrls(data ?? [], true);
+  if (error) throw new Error("Não foi possível carregar os packs.");
+  return withUrls(data ?? [], true);
 }
 
 export const activeTemplatesQuery = queryOptions({

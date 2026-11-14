@@ -71,23 +71,64 @@ export type Database = {
         }
         Relationships: []
       }
+      pack_deliveries: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          status: string
+          template_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          status?: string
+          template_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          status?: string
+          template_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pack_deliveries_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
           email: string | null
           id: string
+          marketing_consent: boolean
+          marketing_consent_at: string | null
           plan: string
         }
         Insert: {
           created_at?: string
           email?: string | null
           id: string
+          marketing_consent?: boolean
+          marketing_consent_at?: string | null
           plan?: string
         }
         Update: {
           created_at?: string
           email?: string | null
           id?: string
+          marketing_consent?: boolean
+          marketing_consent_at?: string | null
           plan?: string
         }
         Relationships: []
@@ -157,9 +198,51 @@ export type Database = {
           },
         ]
       }
+      template_images: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          original_path: string
+          sort_order: number
+          template_id: string
+          thumb_path: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          original_path: string
+          sort_order?: number
+          template_id: string
+          thumb_path?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          original_path?: string
+          sort_order?: number
+          template_id?: string
+          thumb_path?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "template_images_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       templates: {
         Row: {
           aspect_ratio: number | null
+          cover_path: string | null
           created_at: string
           description: string | null
           id: string
@@ -168,13 +251,17 @@ export type Database = {
           is_premium: boolean
           license_note: string | null
           occasion: string | null
+          purchase_url: string | null
+          sort_order: number
           tags: string[]
           theme: string | null
           thumb_path: string | null
           title: string
+          zip_path: string | null
         }
         Insert: {
           aspect_ratio?: number | null
+          cover_path?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -183,13 +270,17 @@ export type Database = {
           is_premium?: boolean
           license_note?: string | null
           occasion?: string | null
+          purchase_url?: string | null
+          sort_order?: number
           tags?: string[]
           theme?: string | null
           thumb_path?: string | null
           title: string
+          zip_path?: string | null
         }
         Update: {
           aspect_ratio?: number | null
+          cover_path?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -198,10 +289,13 @@ export type Database = {
           is_premium?: boolean
           license_note?: string | null
           occasion?: string | null
+          purchase_url?: string | null
+          sort_order?: number
           tags?: string[]
           theme?: string | null
           thumb_path?: string | null
           title?: string
+          zip_path?: string | null
         }
         Relationships: []
       }
@@ -229,6 +323,7 @@ export type Database = {
     }
     Functions: {
       admin_metrics: { Args: never; Returns: Json }
+      admin_pack_metrics: { Args: never; Returns: Json }
       admin_set_plan: {
         Args: { _plan: string; _user_id: string }
         Returns: undefined

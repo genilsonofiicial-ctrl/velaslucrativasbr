@@ -34,6 +34,9 @@ export interface TemplateRef {
   theme: string | null;
   imagePath: string;
   isPremium: boolean;
+  /** Pack e estampa, quando a arte vem de um pack (original via link assinado). */
+  packId?: string;
+  imageId?: string;
 }
 
 export interface CustomImage {
@@ -83,6 +86,8 @@ interface StudioState {
   applyPreset: (id: string) => void;
   toggleCircumference: () => void;
   selectTemplate: (t: TemplateRef) => void;
+  /** Troca a estampa do mesmo pack mantendo medidas e ajustes. */
+  switchPackImage: (t: TemplateRef) => void;
   setCustom: (c: CustomImage | null, file?: Blob | null) => void;
   setCustomPath: (path: string) => void;
   pushHistory: () => void;
@@ -149,6 +154,7 @@ export const useStudio = create<StudioState>()(
           history: [...s.history, s.transform].slice(-50),
           transform: { ...DEFAULT_TRANSFORM, mirror: s.transform.mirror },
         })),
+      switchPackImage: (template) => set({ template, custom: null, customFile: null }),
       setCustom: (custom, file = null) =>
         set((s) => ({
           custom,

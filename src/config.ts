@@ -4,3 +4,6 @@ export const config = {
   proPaymentUrl: "COLE_AQUI_O_LINK_DE_PAGAMENTO",
   appName: "Stúdio Velas Lucrativas",
 } as const;
+
+/** Link para desbloquear packs premium quando o pack não tem link próprio. */
+export const UNLOCK_URL = "COLE_AQUI_O_LINK_DE_COMPRA";
