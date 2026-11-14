@@ -76,8 +76,8 @@ export const sendPackEmail = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const ctx = context as Ctx;
-    const apiKey = process.env.RESEND_API_KEY;
-    const from = process.env.FROM_EMAIL;
+    const apiKey = process.env["RESEND_API_KEY"];
+    const from = process.env["FROM_EMAIL"];
     if (!apiKey || !from) return { ok: false as const, reason: "not_configured" as const };
 
     const { supabaseAdmin, pack, images, profile } = await loadPack(ctx, data.packId);

@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { parseStudioInputs, useCandleCalc, useStudio } from "@/stores/studio";
 import { ArtPreview } from "./ArtPreview";
 import { CylinderPreview } from "./CylinderPreview";
+import { PackStrip } from "./PackStrip";
 
 const FITS: { value: FitMode; label: string; icon: typeof Maximize }[] = [
   { value: "contain", label: "Ajustar à área", icon: Minimize },
@@ -65,7 +66,7 @@ export function StepAdjust() {
     updateTransform({ scale: Math.min(SCALE_LIMITS.max, Math.max(SCALE_LIMITS.min, Number(v.toFixed(2)))) });
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+    <div className="space-y-6"><PackStrip /><div className="grid gap-6 lg:grid-cols-[1fr_340px]">
       <section className="card-soft min-w-0 p-4 md:p-6">
         <Tabs defaultValue="plana">
           <TabsList className="mb-4 grid w-full grid-cols-2 rounded-full bg-muted p-1 sm:w-80">

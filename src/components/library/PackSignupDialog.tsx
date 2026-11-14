@@ -31,7 +31,7 @@ export function PackSignupDialog({ action, onClose }: { action: PackAction | nul
     void track("pack_signup_started", { template_id: action.packId, action: action.type });
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.href.split("#")[0] },
+      options: { emailRedirectTo: window.location.href.split("#")[0] ?? window.location.href },
     });
     setLoading(false);
     if (error) {

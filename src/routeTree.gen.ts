@@ -16,6 +16,7 @@ import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as GuiaRouteImport } from './routes/guia'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMinhasVelasRouteImport } from './routes/_authenticated/minhas-velas'
@@ -58,6 +59,11 @@ const GuiaRoute = GuiaRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
   '/mcp': typeof McpRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
   '/mcp': typeof McpRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
   '/biblioteca/$id': typeof BibliotecaIdRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
   '/mcp': typeof McpRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/minhas-velas': typeof AuthenticatedMinhasVelasRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/guia'
     | '/mcp'
+    | '/privacidade'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/minhas-velas'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/guia'
     | '/mcp'
+    | '/privacidade'
     | '/.well-known/oauth-protected-resource'
     | '/minhas-velas'
     | '/biblioteca/$id'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/guia'
     | '/mcp'
+    | '/privacidade'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/minhas-velas'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   EstudioRoute: typeof EstudioRoute
   GuiaRoute: typeof GuiaRoute
   McpRoute: typeof McpRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BibliotecaIdRoute: typeof BibliotecaIdRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -279,6 +292,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.well-known/oauth-protected-resource': {
@@ -385,6 +405,7 @@ const rootRouteChildren: RootRouteChildren = {
   EstudioRoute: EstudioRoute,
   GuiaRoute: GuiaRoute,
   McpRoute: McpRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BibliotecaIdRoute: BibliotecaIdRoute,
