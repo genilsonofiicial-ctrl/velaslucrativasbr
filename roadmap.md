@@ -1,5 +1,16 @@
 # Roadmap
 
+## Evolução SaaS — aguarda aprovação do diagnóstico
+- [x] Diagnosticar editor, projetos, biblioteca, regras atuais e situação dos pagamentos
+- [ ] Aprovar diagnóstico e decisões de transição do limite gratuito
+- [ ] Preservar modelos e adaptar administração ao catálogo de packs existente
+- [ ] Completar restauração de projetos por estampa e favoritos privados persistentes
+- [ ] Configurar sete exportações gratuitas totais com controle seguro no servidor
+- [ ] Implementar mensal R$ 19,90 e anual R$ 199,00, checkout e assinatura verificada
+- [ ] Adicionar conta, assinatura, comparação de preços e mensagens de conversão
+- [ ] Executar testes funcionais, de isolamento de dados e celulares; relatar pendências reais
+- [ ] Habilitar cobranças reais após publicação, verificação e aprovação externa
+
 ## Feito
 - [x] Design system, layout, telas iniciais, Cloud, tabelas + RLS, buckets, login, useAuth/ProtectedRoute
 
