@@ -123,7 +123,11 @@ function MinhasVelas() {
           .eq("id", p.template_id)
           .maybeSingle();
         if (error) throw error;
-        if (data?.image_path) {
+        if (data && p.template_image_id) {
+          const { data: image, error: imageError } = await supabase.from("template_images").select("id, original_path, title").eq("id", p.template_image_id).eq("template_id", data.id).maybeSingle();
+          if (imageError || !image) throw new Error("Estampa indisponível.");
+          template = { id: data.id, title: image.title ?? data.title, theme: data.theme, imagePath: image.original_path, isPremium: data.is_premium, packId: data.id, imageId: image.id };
+        } else if (data?.image_path) {
           template = {
             id: data.id,
             title: data.title,

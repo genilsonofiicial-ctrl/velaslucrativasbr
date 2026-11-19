@@ -16,9 +16,13 @@ import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as GuiaRouteImport } from './routes/guia'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAssinaturaRouteImport } from './routes/_authenticated/assinatura'
+import { Route as AuthenticatedContaRouteImport } from './routes/_authenticated/conta'
+import { Route as AuthenticatedFavoritasRouteImport } from './routes/_authenticated/favoritas'
 import { Route as AuthenticatedMinhasVelasRouteImport } from './routes/_authenticated/minhas-velas'
 import { Route as BibliotecaIdRouteImport } from './routes/biblioteca_.$id'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -26,6 +30,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
 import { Route as AuthenticatedAdminModelosRouteImport } from './routes/_authenticated/admin.modelos'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin.usuarios'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -61,6 +66,11 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
@@ -75,6 +85,21 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAssinaturaRoute = AuthenticatedAssinaturaRouteImport.update({
+  id: '/assinatura',
+  path: '/assinatura',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedContaRoute = AuthenticatedContaRouteImport.update({
+  id: '/conta',
+  path: '/conta',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFavoritasRoute = AuthenticatedFavoritasRouteImport.update({
+  id: '/favoritas',
+  path: '/favoritas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMinhasVelasRoute =
@@ -116,6 +141,12 @@ const AuthenticatedAdminUsuariosRoute =
     path: '/usuarios',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,9 +155,13 @@ export interface FileRoutesByFullPath {
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
   '/mcp': typeof McpRoute
+  '/planos': typeof PlanosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/assinatura': typeof AuthenticatedAssinaturaRoute
+  '/conta': typeof AuthenticatedContaRoute
+  '/favoritas': typeof AuthenticatedFavoritasRoute
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
   '/biblioteca/$id': typeof BibliotecaIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -134,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/admin/modelos': typeof AuthenticatedAdminModelosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -142,8 +178,12 @@ export interface FileRoutesByTo {
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
   '/mcp': typeof McpRoute
+  '/planos': typeof PlanosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/assinatura': typeof AuthenticatedAssinaturaRoute
+  '/conta': typeof AuthenticatedContaRoute
+  '/favoritas': typeof AuthenticatedFavoritasRoute
   '/minhas-velas': typeof AuthenticatedMinhasVelasRoute
   '/biblioteca/$id': typeof BibliotecaIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -151,6 +191,7 @@ export interface FileRoutesByTo {
   '/admin/modelos': typeof AuthenticatedAdminModelosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,9 +202,13 @@ export interface FileRoutesById {
   '/estudio': typeof EstudioRoute
   '/guia': typeof GuiaRoute
   '/mcp': typeof McpRoute
+  '/planos': typeof PlanosRoute
   '/privacidade': typeof PrivacidadeRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/assinatura': typeof AuthenticatedAssinaturaRoute
+  '/_authenticated/conta': typeof AuthenticatedContaRoute
+  '/_authenticated/favoritas': typeof AuthenticatedFavoritasRoute
   '/_authenticated/minhas-velas': typeof AuthenticatedMinhasVelasRoute
   '/biblioteca_/$id': typeof BibliotecaIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -171,6 +216,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/modelos': typeof AuthenticatedAdminModelosRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,9 +227,13 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/guia'
     | '/mcp'
+    | '/planos'
     | '/privacidade'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
+    | '/assinatura'
+    | '/conta'
+    | '/favoritas'
     | '/minhas-velas'
     | '/biblioteca/$id'
     | '/.lovable/oauth/consent'
@@ -191,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin/modelos'
     | '/admin/usuarios'
     | '/admin/'
+    | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -199,8 +250,12 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/guia'
     | '/mcp'
+    | '/planos'
     | '/privacidade'
     | '/.well-known/oauth-protected-resource'
+    | '/assinatura'
+    | '/conta'
+    | '/favoritas'
     | '/minhas-velas'
     | '/biblioteca/$id'
     | '/.lovable/oauth/consent'
@@ -208,6 +263,7 @@ export interface FileRouteTypes {
     | '/admin/modelos'
     | '/admin/usuarios'
     | '/admin'
+    | '/api/public/payments/webhook'
   id:
     | '__root__'
     | '/'
@@ -217,9 +273,13 @@ export interface FileRouteTypes {
     | '/estudio'
     | '/guia'
     | '/mcp'
+    | '/planos'
     | '/privacidade'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
+    | '/_authenticated/assinatura'
+    | '/_authenticated/conta'
+    | '/_authenticated/favoritas'
     | '/_authenticated/minhas-velas'
     | '/biblioteca_/$id'
     | '/.lovable/oauth/consent'
@@ -227,6 +287,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/modelos'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/admin/'
+    | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -237,10 +298,12 @@ export interface RootRouteChildren {
   EstudioRoute: typeof EstudioRoute
   GuiaRoute: typeof GuiaRoute
   McpRoute: typeof McpRoute
+  PlanosRoute: typeof PlanosRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BibliotecaIdRoute: typeof BibliotecaIdRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -294,6 +357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacidade': {
       id: '/privacidade'
       path: '/privacidade'
@@ -313,6 +383,27 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/assinatura': {
+      id: '/_authenticated/assinatura'
+      path: '/assinatura'
+      fullPath: '/assinatura'
+      preLoaderRoute: typeof AuthenticatedAssinaturaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/conta': {
+      id: '/_authenticated/conta'
+      path: '/conta'
+      fullPath: '/conta'
+      preLoaderRoute: typeof AuthenticatedContaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/favoritas': {
+      id: '/_authenticated/favoritas'
+      path: '/favoritas'
+      fullPath: '/favoritas'
+      preLoaderRoute: typeof AuthenticatedFavoritasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/minhas-velas': {
@@ -364,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -386,11 +484,17 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedAssinaturaRoute: typeof AuthenticatedAssinaturaRoute
+  AuthenticatedContaRoute: typeof AuthenticatedContaRoute
+  AuthenticatedFavoritasRoute: typeof AuthenticatedFavoritasRoute
   AuthenticatedMinhasVelasRoute: typeof AuthenticatedMinhasVelasRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedAssinaturaRoute: AuthenticatedAssinaturaRoute,
+  AuthenticatedContaRoute: AuthenticatedContaRoute,
+  AuthenticatedFavoritasRoute: AuthenticatedFavoritasRoute,
   AuthenticatedMinhasVelasRoute: AuthenticatedMinhasVelasRoute,
 }
 
@@ -405,11 +509,13 @@ const rootRouteChildren: RootRouteChildren = {
   EstudioRoute: EstudioRoute,
   GuiaRoute: GuiaRoute,
   McpRoute: McpRoute,
+  PlanosRoute: PlanosRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BibliotecaIdRoute: BibliotecaIdRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

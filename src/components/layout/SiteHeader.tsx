@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LogIn, LogOut, Shield } from "lucide-react";
+import { Heart, LogIn, LogOut, Shield } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -28,6 +28,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1">
+          {user && <Button asChild variant="gold" size="icon" title="Minhas Favoritas"><Link to="/favoritas" aria-label="Minhas Favoritas"><Heart /></Link></Button>}
           {isAdmin && (
             <Link
               to="/admin"

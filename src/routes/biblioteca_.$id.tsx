@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ComingSoon } from "@/components/library/ComingSoon";
+import { FavoriteButton } from "@/components/library/FavoriteButton";
 import { PackSignupDialog } from "@/components/library/PackSignupDialog";
 import { UNLOCK_URL } from "@/config";
 import { useAuth } from "@/hooks/useAuth";
@@ -221,7 +222,7 @@ function PackPage() {
                 )}
               </div>
               <div className="space-y-2 p-3">
-                <p className="line-clamp-1 text-sm font-semibold">{img.title || `Estampa ${n + 1}`}</p>
+                <div className="flex items-center justify-between gap-2"><p className="line-clamp-1 text-sm font-semibold">{img.title || `Estampa ${n + 1}`}</p><FavoriteButton imageId={img.id} /></div>
                 {locked ? (
                   <Button size="sm" variant="outline" className="w-full" onClick={unlock}>
                     <Lock /> Desbloquear

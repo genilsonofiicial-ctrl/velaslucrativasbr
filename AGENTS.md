@@ -45,3 +45,5 @@ use the editor.
 - Admin dashboards read aggregates through security-definer RPCs (`admin_metrics`, `admin_set_plan`) that check `has_role` first; plan changes never go through a client-writable column.
 - Usage events go through `track()` in `src/lib/analytics.ts`, which never throws and stores an anonymous session id in localStorage.
 - Agent integrations live in `src/lib/mcp/` with OAuth caller-scoped clients; browser WebMCP tools stay in their owning components and share UI actions so external access follows the same RLS and permissions.
+- Favorites reference individual catalog images and are protected by owner-scoped RLS; saved projects retain both pack and image references so reopening restores the original art.
+- Library themes derive from active catalog content; polling refreshes published catalog data without software releases.

@@ -65,6 +65,8 @@ export function projectPayload(o: {
     sheet: o.input.sheet,
     printer_margin_cm: o.input.printerMarginCm ?? LIMITS.printerMargin.default,
     template_id: o.template?.id ?? null,
+    template_image_id: o.template?.imageId ?? null,
+    library_theme: o.template?.theme ?? null,
     custom_image_path: o.template ? null : o.customPath,
     transform: transformToJson(o.transform),
     thumbnail: o.thumbnail,

@@ -71,6 +71,39 @@ export type Database = {
         }
         Relationships: []
       }
+      image_favorites: {
+        Row: {
+          created_at: string
+          image_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          image_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          image_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "image_favorites_image_id_fkey"
+            columns: ["image_id"]
+            isOneToOne: false
+            referencedRelation: "template_images"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "image_favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pack_deliveries: {
         Row: {
           created_at: string
@@ -102,6 +135,106 @@ export type Database = {
             columns: ["template_id"]
             isOneToOne: false
             referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_events: {
+        Row: {
+          environment: string
+          event_id: string
+          event_type: string
+          occurred_at: string
+          processed_at: string
+        }
+        Insert: {
+          environment: string
+          event_id: string
+          event_type: string
+          occurred_at: string
+          processed_at?: string
+        }
+        Update: {
+          environment?: string
+          event_id?: string
+          event_type?: string
+          occurred_at?: string
+          processed_at?: string
+        }
+        Relationships: []
+      }
+      payment_history: {
+        Row: {
+          amount_minor: number | null
+          currency: string | null
+          environment: string
+          id: string
+          occurred_at: string
+          status: string
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_minor?: number | null
+          currency?: string | null
+          environment: string
+          id: string
+          occurred_at: string
+          status: string
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_minor?: number | null
+          currency?: string | null
+          environment?: string
+          id?: string
+          occurred_at?: string
+          status?: string
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      print_exports: {
+        Row: {
+          charged_free: boolean
+          created_at: string
+          environment: string
+          format: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          charged_free: boolean
+          created_at?: string
+          environment: string
+          format: string
+          id: string
+          user_id: string
+        }
+        Update: {
+          charged_free?: boolean
+          created_at?: string
+          environment?: string
+          format?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_exports_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -141,12 +274,14 @@ export type Database = {
           created_at: string
           custom_image_path: string | null
           id: string
+          library_theme: string | null
           margin_cm: number | null
           mode: string
           name: string
           printer_margin_cm: number | null
           sheet: string
           template_id: string | null
+          template_image_id: string | null
           thumbnail: string | null
           transform: Json
           updated_at: string
@@ -159,12 +294,14 @@ export type Database = {
           created_at?: string
           custom_image_path?: string | null
           id?: string
+          library_theme?: string | null
           margin_cm?: number | null
           mode?: string
           name?: string
           printer_margin_cm?: number | null
           sheet?: string
           template_id?: string | null
+          template_image_id?: string | null
           thumbnail?: string | null
           transform?: Json
           updated_at?: string
@@ -177,12 +314,14 @@ export type Database = {
           created_at?: string
           custom_image_path?: string | null
           id?: string
+          library_theme?: string | null
           margin_cm?: number | null
           mode?: string
           name?: string
           printer_margin_cm?: number | null
           sheet?: string
           template_id?: string | null
+          template_image_id?: string | null
           thumbnail?: string | null
           transform?: Json
           updated_at?: string
@@ -194,6 +333,72 @@ export type Database = {
             columns: ["template_id"]
             isOneToOne: false
             referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "projects_template_image_id_fkey"
+            columns: ["template_image_id"]
+            isOneToOne: false
+            referencedRelation: "template_images"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          environment: string
+          id: string
+          last_event_at: string
+          paddle_customer_id: string
+          paddle_subscription_id: string
+          price_id: string
+          product_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          environment: string
+          id?: string
+          last_event_at: string
+          paddle_customer_id: string
+          paddle_subscription_id: string
+          price_id: string
+          product_id: string
+          status: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          environment?: string
+          id?: string
+          last_event_at?: string
+          paddle_customer_id?: string
+          paddle_subscription_id?: string
+          price_id?: string
+          product_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -328,9 +533,33 @@ export type Database = {
         Args: { _plan: string; _user_id: string }
         Returns: undefined
       }
+      apply_payment_event: {
+        Args: {
+          _data: Json
+          _env: string
+          _event_id: string
+          _occurred: string
+          _type: string
+        }
+        Returns: undefined
+      }
+      authorize_print_export: {
+        Args: {
+          _env: string
+          _export_id: string
+          _format: string
+          _template_id?: string
+          _user_id: string
+        }
+        Returns: Json
+      }
       export_count_this_month: {
         Args: { _session_id: string }
         Returns: number
+      }
+      has_paid_access: {
+        Args: { _env?: string; _user_id: string }
+        Returns: boolean
       }
       has_role: {
         Args: {

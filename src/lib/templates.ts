@@ -82,7 +82,8 @@ export async function fetchAllTemplates(): Promise<Pack[]> {
 export const activeTemplatesQuery = queryOptions({
   queryKey: ["templates", "active"],
   queryFn: fetchActiveTemplates,
-  staleTime: 30 * 60 * 1000,
+  staleTime: 60 * 1000,
+  refetchInterval: 60 * 1000,
 });
 
 export const allTemplatesQuery = queryOptions({

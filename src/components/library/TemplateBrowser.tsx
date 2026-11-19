@@ -26,6 +26,7 @@ export function TemplateBrowser({ selectedId }: { selectedId?: string | null | u
   const [theme, setTheme] = useState("");
   const [occasion, setOccasion] = useState("");
   const [search, setSearch] = useState("");
+  const themes = useMemo(() => Array.from(new Set((data ?? []).map((t) => t.theme).filter((t): t is string => !!t))).sort((a, b) => a.localeCompare(b, "pt-BR")), [data]);
 
   const occasions = useMemo(
     () =>
@@ -72,7 +73,7 @@ export function TemplateBrowser({ selectedId }: { selectedId?: string | null | u
       },
     },
     execute: (args: { theme?: string; occasion?: string; search?: string }) => runWebMCPTool("filter_templates", () => {
-      if (args.theme !== undefined && (typeof args.theme !== "string" || (args.theme !== "" && !THEMES.includes(args.theme as (typeof THEMES)[number])))) {
+      if (args.theme !== undefined && (typeof args.theme !== "string" || (args.theme !== "" && !themes.includes(args.theme)))) {
         throw new Error("Tema desconhecido; use um tema da biblioteca ou texto vazio.");
       }
       if (args.occasion !== undefined && (typeof args.occasion !== "string" || (args.occasion !== "" && !occasions.includes(args.occasion)))) {
@@ -122,7 +123,7 @@ export function TemplateBrowser({ selectedId }: { selectedId?: string | null | u
       </div>
 
       <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Tema">
-        {["", ...THEMES].map((t) => (
+        {["", ...themes].map((t) => (
           <Button
             key={t || "todos"}
             size="sm"
